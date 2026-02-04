@@ -65,6 +65,9 @@ export default async function SubsPage() {
                 <Link href={`/app/subs/${sub.id}`} className="text-xs font-semibold text-cyan-600">
                   Abrir
                 </Link>
+                <Link href={`/app/subs/${sub.id}/edit`} className="text-xs font-semibold text-slate-500">
+                  Editar
+                </Link>
               </div>
             </div>
           </div>

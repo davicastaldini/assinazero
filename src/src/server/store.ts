@@ -55,6 +55,34 @@ export async function updateSubStatus(id: string, status: SubscriptionStatus) {
   return updated
 }
 
+export async function updateSub(
+  id: string,
+  payload: {
+    name: string
+    price: string
+    nextCharge: string
+    status: SubscriptionStatus
+    notes: string
+  }
+) {
+  const sub = subs.get(id)
+  if (!sub) return null
+  const updated = {
+    ...sub,
+    ...payload,
+    updatedAt: new Date().toISOString(),
+  }
+  subs.set(id, updated)
+  return updated
+}
+
+export async function deleteSub(id: string) {
+  const sub = subs.get(id)
+  if (!sub) return null
+  subs.delete(id)
+  return sub
+}
+
 function ensureSeed() {
   if (subs.size > 0) return
   const now = new Date().toISOString()

@@ -56,6 +56,26 @@ export default async function SubDetailPage({ params }: { params: Promise<{ id: 
         <p className="mt-2 text-sm text-slate-600">{sub.notes || 'Sem notas adicionais.'}</p>
       </section>
 
+      <section className="flex flex-wrap gap-3">
+        <Link href={`/app/subs/${sub.id}/edit`} className="rounded-full border border-slate-200 px-4 py-2 text-sm">
+          Editar
+        </Link>
+        <form
+          action={`/api/subs/${sub.id}`}
+          method="post"
+          onSubmit={async (e) => {
+            e.preventDefault()
+            if (!confirm('Excluir assinatura?')) return
+            const res = await fetch(`/api/subs/${sub.id}`, { method: 'DELETE' })
+            if (res.ok) window.location.href = '/app/subs'
+          }}
+        >
+          <button className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white">
+            Excluir
+          </button>
+        </form>
+      </section>
+
       <section className="rounded-2xl border border-slate-200 p-5">
         <h2 className="text-sm font-semibold text-slate-900">Atualizar status</h2>
         <form
