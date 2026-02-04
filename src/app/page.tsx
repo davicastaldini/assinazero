@@ -6,46 +6,29 @@ const highlights = [
   { label: "Cobranças evitadas", value: "97%" },
 ];
 
-const features = [
+const missions = [
   {
-    title: "Descubra cobranças invisíveis",
-    desc: "Detecta assinaturas esquecidas e renovações automáticas antes de virarem surpresa.",
+    title: "Missão 1 — Detectar",
+    desc: "Descobrir assinaturas invisíveis e renovações automáticas.",
+    reward: "+20 XP",
   },
   {
-    title: "Alerta antes de cobrar",
-    desc: "Notifica 3, 7 e 14 dias antes de cada pagamento.",
+    title: "Missão 2 — Organizar",
+    desc: "Agrupar por categoria e definir alertas inteligentes.",
+    reward: "+30 XP",
   },
   {
-    title: "Cancelamento guiado",
-    desc: "Passo a passo por serviço com tempo estimado e links diretos.",
-  },
-  {
-    title: "Resumo mensal simples",
-    desc: "Mostra onde seu dinheiro foi e o que pode cortar agora.",
-  },
-  {
-    title: "Metas de gasto",
-    desc: "Defina um teto e receba alerta se estourar.",
-  },
-  {
-    title: "Privacidade total",
-    desc: "Seus dados não são vendidos. Você controla tudo.",
+    title: "Missão 3 — Cortar",
+    desc: "Cancelar o que não usa com guia passo a passo.",
+    reward: "+50 XP",
   },
 ];
 
-const steps = [
-  {
-    title: "Conectar",
-    desc: "Importe suas assinaturas do e‑mail ou adicione manualmente.",
-  },
-  {
-    title: "Organizar",
-    desc: "O AssinaZero categoriza, soma e cria alertas automáticos.",
-  },
-  {
-    title: "Cortar",
-    desc: "Receba sugestões de economia e cancele em poucos cliques.",
-  },
+const badges = [
+  { name: "Caçador de Vazamentos", icon: "🕵️" },
+  { name: "Mestre do Cancelamento", icon: "✂️" },
+  { name: "Guardião do Orçamento", icon: "🛡️" },
+  { name: "Nível 3 Desbloqueado", icon: "🏆" },
 ];
 
 const faqs = [
@@ -60,19 +43,6 @@ const faqs = [
   {
     q: "Quanto custa?",
     a: "R$19/mês com 7 dias grátis. Cancela quando quiser.",
-  },
-];
-
-const testimonials = [
-  {
-    name: "Bruna S.",
-    role: "Designer",
-    quote: "Descobri 3 assinaturas esquecidas. Economizei R$ 120 no mês.",
-  },
-  {
-    name: "Rafael M.",
-    role: "Analista",
-    quote: "Os alertas me salvaram da renovação anual sem perceber.",
   },
 ];
 
@@ -94,11 +64,11 @@ export default function Home() {
               <span className="text-lg font-semibold">AssinaZero</span>
             </div>
             <div className="hidden items-center gap-6 text-sm text-zinc-300 md:flex">
-              <a href="#features" className="hover:text-white">
-                Produto
+              <a href="#missions" className="hover:text-white">
+                Missões
               </a>
-              <a href="#workflow" className="hover:text-white">
-                Como funciona
+              <a href="#badges" className="hover:text-white">
+                Conquistas
               </a>
               <a href="#pricing" className="hover:text-white">
                 Preço
@@ -115,13 +85,13 @@ export default function Home() {
           <section className="grid gap-12 py-20 md:grid-cols-[1.1fr_0.9fr]">
             <div className="space-y-6">
               <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-4 py-1 text-xs font-medium text-cyan-200">
-                Assinaturas sob controle
+                Jogo do dinheiro invisível
               </span>
               <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
                 Pare de pagar por coisas que você nem usa.
               </h1>
               <p className="text-lg text-zinc-300">
-                O AssinaZero encontra cobranças esquecidas, avisa antes de renovar e te ajuda a cancelar sem stress.
+                O AssinaZero transforma suas assinaturas em uma jornada simples: detectar vazamentos, organizar gastos e cortar o que não faz sentido.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <button className="rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-zinc-950 hover:bg-cyan-300">
@@ -136,11 +106,12 @@ export default function Home() {
               </div>
               <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-400">
                 <span>🔔 Alertas antes de cobrar</span>
-                <span>✂️ Cortes sugeridos</span>
-                <span>🔒 Privacidade total</span>
+                <span>🎯 Missões claras</span>
+                <span>🏆 Conquistas</span>
               </div>
+
               <div className="mt-6 grid gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur">
-                <p className="text-xs text-zinc-400">Economia média nos primeiros 30 dias</p>
+                <p className="text-xs text-zinc-400">Seu placar do mês</p>
                 <div className="grid gap-3 sm:grid-cols-3">
                   {highlights.map((item) => (
                     <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
@@ -155,11 +126,12 @@ export default function Home() {
             <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur">
               <div className="space-y-4">
                 <div className="rounded-2xl border border-white/10 bg-[#10131a] p-4">
-                  <p className="text-xs text-zinc-400">Resumo do mês</p>
-                  <p className="mt-2 text-sm font-semibold">R$ 486 em assinaturas</p>
-                  <p className="mt-2 text-sm text-zinc-300">
-                    3 serviços sem uso detectados. Economia possível de R$ 128.
-                  </p>
+                  <p className="text-xs text-zinc-400">Nível atual</p>
+                  <p className="mt-2 text-2xl font-semibold">Explorador — 180 XP</p>
+                  <div className="mt-3 h-2 w-full rounded-full bg-white/10">
+                    <div className="h-2 w-2/3 rounded-full bg-cyan-400" />
+                  </div>
+                  <p className="mt-2 text-xs text-zinc-400">Próximo nível em 40 XP</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-[#10131a] p-4">
                   <p className="text-xs text-zinc-400">Renovações próximas</p>
@@ -182,82 +154,46 @@ export default function Home() {
       </div>
 
       <div className="mx-auto max-w-6xl px-6">
-        <section className="grid gap-6 border-y border-white/10 py-12 md:grid-cols-2">
+        <section id="missions" className="space-y-10 py-16">
           <div className="space-y-3">
-            <h2 className="text-2xl font-semibold">O dinheiro vai embora sem você perceber</h2>
-            <p className="text-sm text-zinc-400">
-              Assinaturas ocultas e renovações automáticas são o novo "vazamento" do seu bolso.
-            </p>
+            <h2 className="text-3xl font-semibold">Missões do mês</h2>
+            <p className="text-zinc-300">Complete etapas simples e ganhe XP real (economia real).</p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs text-zinc-400">Antes</p>
-              <p className="mt-2 text-sm text-zinc-300">Cobranças surpresa e cancelamentos difíceis.</p>
-            </div>
-            <div className="rounded-2xl border border-cyan-400/40 bg-cyan-400/10 p-4">
-              <p className="text-xs text-cyan-200">Depois</p>
-              <p className="mt-2 text-sm text-cyan-100">Alertas claros e economia real mês a mês.</p>
-            </div>
-          </div>
-        </section>
-
-        <section id="features" className="space-y-10 py-16">
-          <div className="space-y-3">
-            <h2 className="text-3xl font-semibold">O que o AssinaZero faz por você</h2>
-            <p className="text-zinc-300">
-              Tudo que você precisa para controlar assinaturas em um só lugar.
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur"
-              >
-                <h3 className="text-lg font-semibold">{feature.title}</h3>
-                <p className="mt-2 text-sm text-zinc-300">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="workflow" className="grid gap-10 py-16 md:grid-cols-[0.8fr_1.2fr]">
-          <div className="space-y-4">
-            <h2 className="text-3xl font-semibold">Como funciona</h2>
-            <p className="text-zinc-300">
-              Em 3 passos você já começa a economizar.
-            </p>
-            <button className="rounded-full border border-zinc-700 px-6 py-3 text-sm font-semibold text-white hover:border-cyan-400">
-              Ver exemplo real
-            </button>
-          </div>
-          <div className="grid gap-4">
-            {steps.map((step, index) => (
-              <div
-                key={step.title}
-                className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400/20 text-sm font-semibold text-cyan-200">
-                  {index + 1}
+          <div className="grid gap-6 md:grid-cols-3">
+            {missions.map((mission) => (
+              <div key={mission.title} className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <h3 className="text-lg font-semibold">{mission.title}</h3>
+                <p className="mt-2 text-sm text-zinc-300">{mission.desc}</p>
+                <span className="mt-4 inline-flex rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-200">
+                  {mission.reward}
                 </span>
-                <div>
-                  <h3 className="text-lg font-semibold">{step.title}</h3>
-                  <p className="mt-1 text-sm text-zinc-300">{step.desc}</p>
-                </div>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="grid gap-6 py-12 md:grid-cols-2">
-          {testimonials.map((item) => (
-            <div key={item.name} className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-              <p className="text-sm text-zinc-200">“{item.quote}”</p>
-              <p className="mt-4 text-xs text-zinc-400">
-                {item.name} • {item.role}
-              </p>
+        <section id="badges" className="grid gap-6 border-y border-white/10 py-12 md:grid-cols-2">
+          <div className="space-y-3">
+            <h2 className="text-2xl font-semibold">Conquistas desbloqueáveis</h2>
+            <p className="text-sm text-zinc-400">
+              Cada economia vira uma medalha. Você vê o progresso e mantém o ritmo.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {badges.map((badge) => (
+                <span key={badge.name} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs">
+                  {badge.icon} {badge.name}
+                </span>
+              ))}
             </div>
-          ))}
+          </div>
+          <div className="rounded-2xl border border-cyan-400/40 bg-cyan-400/10 p-6">
+            <p className="text-xs text-cyan-200">Ranking pessoal</p>
+            <p className="mt-2 text-2xl font-semibold text-white">Você economizou R$ 186 este mês</p>
+            <p className="mt-2 text-sm text-cyan-100">Top 12% dos usuários AssinaZero.</p>
+            <div className="mt-4 h-2 w-full rounded-full bg-white/20">
+              <div className="h-2 w-4/5 rounded-full bg-white" />
+            </div>
+          </div>
         </section>
 
         <section id="pricing" className="space-y-10 py-16">
@@ -292,10 +228,7 @@ export default function Home() {
           </div>
           <div className="space-y-4">
             {faqs.map((faq) => (
-              <div
-                key={faq.q}
-                className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur"
-              >
+              <div key={faq.q} className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <h3 className="text-base font-semibold">{faq.q}</h3>
                 <p className="mt-2 text-sm text-zinc-300">{faq.a}</p>
               </div>
