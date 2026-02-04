@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 const highlights = [
   { label: "Assinaturas rastreadas", value: "+12" },
@@ -8,16 +11,19 @@ const highlights = [
 
 const missions = [
   {
+    id: "detectar",
     title: "Missão 1 — Detectar",
     desc: "Descobrir assinaturas invisíveis e renovações automáticas.",
     reward: "+20 XP",
   },
   {
+    id: "organizar",
     title: "Missão 2 — Organizar",
     desc: "Agrupar por categoria e definir alertas inteligentes.",
     reward: "+30 XP",
   },
   {
+    id: "cortar",
     title: "Missão 3 — Cortar",
     desc: "Cancelar o que não usa com guia passo a passo.",
     reward: "+50 XP",
@@ -25,10 +31,10 @@ const missions = [
 ];
 
 const badges = [
-  { name: "Caçador de Vazamentos", icon: "🕵️" },
-  { name: "Mestre do Cancelamento", icon: "✂️" },
-  { name: "Guardião do Orçamento", icon: "🛡️" },
-  { name: "Nível 3 Desbloqueado", icon: "🏆" },
+  { id: "hunter", name: "Caçador de Vazamentos", icon: "🕵️" },
+  { id: "cancel", name: "Mestre do Cancelamento", icon: "✂️" },
+  { id: "guardian", name: "Guardião do Orçamento", icon: "🛡️" },
+  { id: "level", name: "Nível 3 Desbloqueado", icon: "🏆" },
 ];
 
 const faqs = [
@@ -47,6 +53,36 @@ const faqs = [
 ];
 
 export default function Home() {
+  const [done, setDone] = useState<string[]>([]);
+
+  const progress = useMemo(() =>
+    Math.round((done.length / missions.length) * 100)
+  , [done.length]);
+
+  const xp = useMemo(() => {
+    return done.reduce((acc, id) => {
+      if (id === "detectar") return acc + 20;
+      if (id === "organizar") return acc + 30;
+      if (id === "cortar") return acc + 50;
+      return acc;
+    }, 0);
+  }, [done]);
+
+  const level = xp >= 100 ? 3 : xp >= 50 ? 2 : 1;
+
+  function toggleMission(id: string) {
+    setDone((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
+  const unlockedBadges = useMemo(() => {
+    const unlocked = new Set<string>();
+    if (done.includes("detectar")) unlocked.add("hunter");
+    if (done.includes("cortar")) unlocked.add("cancel");
+    if (done.length >= 2) unlocked.add("guardian");
+    if (level >= 3) unlocked.add("level");
+    return unlocked;
+  }, [done, level]);
+
   return (
     <div className="min-h-screen bg-[#0b0d12] text-zinc-100">
       <div className="relative overflow-hidden">
@@ -126,12 +162,17 @@ export default function Home() {
             <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur">
               <div className="space-y-4">
                 <div className="rounded-2xl border border-white/10 bg-[#10131a] p-4">
-                  <p className="text-xs text-zinc-400">Nível atual</p>
-                  <p className="mt-2 text-2xl font-semibold">Explorador — 180 XP</p>
-                  <div className="mt-3 h-2 w-full rounded-full bg-white/10">
-                    <div className="h-2 w-2/3 rounded-full bg-cyan-400" />
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-zinc-400">Nível atual</p>
+                    <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[10px] text-cyan-200">
+                      Nível {level}
+                    </span>
                   </div>
-                  <p className="mt-2 text-xs text-zinc-400">Próximo nível em 40 XP</p>
+                  <p className="mt-2 text-2xl font-semibold">Explorador — {xp} XP</p>
+                  <div className="mt-3 h-2 w-full rounded-full bg-white/10">
+                    <div className="h-2 rounded-full bg-cyan-400" style={{ width: `${progress}%` }} />
+                  </div>
+                  <p className="mt-2 text-xs text-zinc-400">Progresso do mês: {progress}%</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-[#10131a] p-4">
                   <p className="text-xs text-zinc-400">Renovações próximas</p>
@@ -160,15 +201,31 @@ export default function Home() {
             <p className="text-zinc-300">Complete etapas simples e ganhe XP real (economia real).</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {missions.map((mission) => (
-              <div key={mission.title} className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                <h3 className="text-lg font-semibold">{mission.title}</h3>
-                <p className="mt-2 text-sm text-zinc-300">{mission.desc}</p>
-                <span className="mt-4 inline-flex rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-200">
-                  {mission.reward}
-                </span>
-              </div>
-            ))}
+            {missions.map((mission) => {
+              const isDone = done.includes(mission.id);
+              return (
+                <div key={mission.title} className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">{mission.title}</h3>
+                    {isDone ? <span className="text-xs text-emerald-300">Concluída</span> : null}
+                  </div>
+                  <p className="mt-2 text-sm text-zinc-300">{mission.desc}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="inline-flex rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-200">
+                      {mission.reward}
+                    </span>
+                    <button
+                      onClick={() => toggleMission(mission.id)}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        isDone ? "bg-emerald-400 text-zinc-900" : "bg-cyan-400 text-zinc-950"
+                      }`}
+                    >
+                      {isDone ? "Desfazer" : "Completar"}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -179,11 +236,21 @@ export default function Home() {
               Cada economia vira uma medalha. Você vê o progresso e mantém o ritmo.
             </p>
             <div className="flex flex-wrap gap-2">
-              {badges.map((badge) => (
-                <span key={badge.name} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs">
-                  {badge.icon} {badge.name}
-                </span>
-              ))}
+              {badges.map((badge) => {
+                const unlocked = unlockedBadges.has(badge.id);
+                return (
+                  <span
+                    key={badge.name}
+                    className={`rounded-full border px-3 py-1 text-xs ${
+                      unlocked
+                        ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+                        : "border-white/10 bg-white/5 text-zinc-400"
+                    }`}
+                  >
+                    {badge.icon} {badge.name}
+                  </span>
+                );
+              })}
             </div>
           </div>
           <div className="rounded-2xl border border-cyan-400/40 bg-cyan-400/10 p-6">
