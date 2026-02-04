@@ -2,6 +2,19 @@ import Link from 'next/link'
 
 import { listSubs } from '@/src/server/store'
 
+function statusBadge(status: string) {
+  switch (status) {
+    case 'ativa':
+      return 'border-emerald-400/30 text-emerald-200'
+    case 'a_cancelar':
+      return 'border-amber-400/30 text-amber-200'
+    case 'cancelada':
+      return 'border-white/20 text-white/60'
+    default:
+      return 'border-white/20 text-white/60'
+  }
+}
+
 function statusLabel(status: string) {
   switch (status) {
     case 'ativa':
@@ -15,6 +28,12 @@ function statusLabel(status: string) {
   }
 }
 
+const insights = [
+  { title: 'Assinaturas duplicadas', value: '2 serviços', detail: 'Economia possível: R$ 34/mês' },
+  { title: 'Renovações nos próximos 7 dias', value: '4 cobranças', detail: 'R$ 152 no total' },
+  { title: 'Serviços sem uso', value: '3 ativos', detail: 'Potencial de corte: R$ 89/mês' },
+]
+
 export default async function DashboardPage() {
   const subs = await listSubs()
   const total = subs.length
@@ -23,19 +42,16 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Dashboard financeiro</h1>
-          <p className="text-sm text-white/60">Simulação premium para entender onde o dinheiro está indo.</p>
+          <h1 className="text-2xl font-semibold">Visão geral financeira</h1>
+          <p className="text-sm text-white/60">Seu fluxo de assinaturas, alertas e oportunidades de corte.</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/80">
-            Exportar relatório
+            Exportar CSV
           </button>
-          <Link
-            href="/app/subs/new"
-            className="rounded-full bg-[#22D3EE] px-5 py-2 text-xs font-semibold text-[#0B0F1A]"
-          >
+          <Link href="/app/subs/new" className="rounded-full bg-[#2563EB] px-5 py-2 text-xs font-semibold text-white">
             Nova assinatura
           </Link>
         </div>
@@ -45,7 +61,7 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <p className="text-xs text-white/60">Assinaturas ativas</p>
           <p className="mt-2 text-3xl font-semibold">{total}</p>
-          <p className="mt-3 text-xs text-emerald-300">+2 adicionadas este mês</p>
+          <p className="mt-3 text-xs text-emerald-300">+2 este mês</p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <p className="text-xs text-white/60">A cancelar</p>
@@ -64,11 +80,11 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
         <div className="rounded-2xl border border-white/10 bg-[#0F1423] p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Fluxo mensal</h2>
-            <span className="text-xs text-white/50">Atualizado hoje</span>
+            <span className="text-xs text-white/50">Jan — Fev</span>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-xl bg-white/5 p-4">
@@ -84,10 +100,9 @@ export default async function DashboardPage() {
               <p className="mt-2 text-2xl font-semibold">3 dias</p>
             </div>
           </div>
-
-          <div className="mt-6 h-[180px] rounded-2xl bg-gradient-to-r from-[#2563EB]/30 via-[#22D3EE]/20 to-[#0EA5E9]/30 p-4">
+          <div className="mt-6 h-[200px] rounded-2xl bg-gradient-to-r from-[#2563EB]/40 via-[#22D3EE]/20 to-[#0EA5E9]/30 p-4">
             <div className="flex h-full items-end gap-3">
-              {['40%', '55%', '35%', '70%', '60%', '80%', '50%'].map((h, i) => (
+              {['45%', '58%', '40%', '75%', '64%', '88%', '55%'].map((h, i) => (
                 <div key={i} className="flex-1 rounded-xl bg-white/70" style={{ height: h }} />
               ))}
             </div>
@@ -95,91 +110,61 @@ export default async function DashboardPage() {
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-[#0F1423] p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Alertas críticos</h2>
-            <Link href="/app/subs" className="text-xs font-semibold text-cyan-300">
-              Ver lista
-            </Link>
-          </div>
+          <h2 className="text-lg font-semibold">Insights acionáveis</h2>
           <div className="mt-6 space-y-4">
-            <div className="rounded-xl border border-amber-400/20 bg-amber-400/10 p-4">
-              <p className="text-sm font-semibold">Adobe</p>
-              <p className="text-xs text-amber-200">Renova em 2 dias • R$ 89</p>
-            </div>
-            <div className="rounded-xl border border-pink-400/20 bg-pink-400/10 p-4">
-              <p className="text-sm font-semibold">Streaming Plus</p>
-              <p className="text-xs text-pink-200">Sem uso há 28 dias</p>
-            </div>
-            <div className="rounded-xl border border-indigo-400/20 bg-indigo-400/10 p-4">
-              <p className="text-sm font-semibold">Backup Cloud</p>
-              <p className="text-xs text-indigo-200">Preço subiu 14% este mês</p>
-            </div>
+            {insights.map((item) => (
+              <div key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs text-white/50">{item.title}</p>
+                <p className="mt-2 text-lg font-semibold">{item.value}</p>
+                <p className="mt-2 text-xs text-white/60">{item.detail}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <div className="rounded-2xl border border-white/10 bg-[#0F1423] p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Próximas cobranças</h2>
+            <h2 className="text-lg font-semibold">Assinaturas críticas</h2>
             <Link href="/app/subs" className="text-xs font-semibold text-cyan-300">
-              Ver tudo
+              Ver todas
             </Link>
           </div>
-          <div className="mt-6 grid gap-3">
+          <div className="mt-6 overflow-hidden rounded-xl border border-white/10">
+            <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-3 border-b border-white/10 bg-white/5 px-4 py-3 text-xs text-white/60">
+              <span>Serviço</span>
+              <span>Valor</span>
+              <span>Renova</span>
+              <span>Status</span>
+            </div>
             {subs.slice(0, 5).map((sub) => (
-              <div key={sub.id} className="flex flex-col gap-2 rounded-xl border border-white/10 bg-white/5 p-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="text-sm font-semibold">
-                    {sub.name} · {sub.price}
-                  </p>
-                  <p className="text-xs text-white/60">Próxima cobrança: {sub.nextCharge}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
-                    {statusLabel(sub.status)}
-                  </span>
-                  <Link href={`/app/subs/${sub.id}`} className="text-xs font-semibold text-white">
-                    Ver detalhes
-                  </Link>
-                </div>
+              <div key={sub.id} className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-3 border-b border-white/5 px-4 py-3 text-sm">
+                <span className="font-semibold">{sub.name}</span>
+                <span>{sub.price}</span>
+                <span>{sub.nextCharge}</span>
+                <span className={`rounded-full border px-2 py-0.5 text-xs ${statusBadge(sub.status)}`}>
+                  {statusLabel(sub.status)}
+                </span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-[#0F1423] p-6">
-          <h2 className="text-lg font-semibold">Saúde financeira</h2>
-          <div className="mt-6 space-y-4">
-            <div>
-              <div className="flex items-center justify-between text-xs text-white/60">
-                <span>Controle de assinaturas</span>
-                <span>72%</span>
-              </div>
-              <div className="mt-2 h-2 rounded-full bg-white/10">
-                <div className="h-2 w-[72%] rounded-full bg-emerald-400" />
-              </div>
+          <h2 className="text-lg font-semibold">Atividade recente</h2>
+          <div className="mt-6 space-y-4 text-sm text-white/70">
+            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p className="text-white/80">Spotify marcado para cancelar</p>
+              <p className="mt-2 text-xs text-white/50">Hoje • 14:05</p>
             </div>
-            <div>
-              <div className="flex items-center justify-between text-xs text-white/60">
-                <span>Alertas configurados</span>
-                <span>54%</span>
-              </div>
-              <div className="mt-2 h-2 rounded-full bg-white/10">
-                <div className="h-2 w-[54%] rounded-full bg-cyan-400" />
-              </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p className="text-white/80">Adobe alertado — renova em 2 dias</p>
+              <p className="mt-2 text-xs text-white/50">Ontem • 09:22</p>
             </div>
-            <div>
-              <div className="flex items-center justify-between text-xs text-white/60">
-                <span>Economia potencial</span>
-                <span>80%</span>
-              </div>
-              <div className="mt-2 h-2 rounded-full bg-white/10">
-                <div className="h-2 w-[80%] rounded-full bg-indigo-400" />
-              </div>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-xs text-white/70">
-              Você pode economizar R$ 128/mês cortando duas assinaturas agora.
+            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p className="text-white/80">Plano Netflix ajustado</p>
+              <p className="mt-2 text-xs text-white/50">2 dias atrás</p>
             </div>
           </div>
         </div>
