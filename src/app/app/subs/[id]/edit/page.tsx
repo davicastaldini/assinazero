@@ -55,50 +55,50 @@ export default function EditSubPage({ params }: { params: { id: string } }) {
   }
 
   if (loading) {
-    return <p className="text-sm text-slate-500">Carregando...</p>
+    return <p className="text-sm text-[#64748B]">Carregando...</p>
   }
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold text-slate-900">Editar assinatura</h1>
-        <p className="text-sm text-slate-500">Atualize os dados da assinatura.</p>
+        <h1 className="text-2xl font-semibold">Editar assinatura</h1>
+        <p className="text-sm text-[#64748B]">Atualize os dados da assinatura.</p>
       </header>
 
-      <div className="rounded-2xl border border-slate-200 p-5">
+      <div className="rounded-[22px] border border-[#E7E2DA] p-5">
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-slate-700">Serviço</label>
-            <input className="rounded-lg border border-slate-200 px-3 py-2 text-sm" value={name} onChange={(e) => setName(e.target.value)} />
+            <label className="text-sm font-medium text-[#0F172A]">Serviço</label>
+            <input className="rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-slate-700">Valor</label>
-            <input className="rounded-lg border border-slate-200 px-3 py-2 text-sm" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <label className="text-sm font-medium text-[#0F172A]">Valor</label>
+            <input className="rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm" value={price} onChange={(e) => setPrice(e.target.value)} />
           </div>
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-slate-700">Próxima cobrança</label>
-            <input className="rounded-lg border border-slate-200 px-3 py-2 text-sm" value={nextCharge} onChange={(e) => setNextCharge(e.target.value)} />
+            <label className="text-sm font-medium text-[#0F172A]">Próxima cobrança</label>
+            <input className="rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm" value={nextCharge} onChange={(e) => setNextCharge(e.target.value)} />
           </div>
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-slate-700">Status</label>
-            <select className="rounded-lg border border-slate-200 px-3 py-2 text-sm" value={status} onChange={(e) => setStatus(e.target.value)}>
+            <label className="text-sm font-medium text-[#0F172A]">Status</label>
+            <select className="rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="ativa">Ativa</option>
               <option value="a_cancelar">A cancelar</option>
               <option value="cancelada">Cancelada</option>
             </select>
           </div>
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-slate-700">Notas</label>
-            <textarea className="min-h-[120px] rounded-lg border border-slate-200 px-3 py-2 text-sm" value={notes} onChange={(e) => setNotes(e.target.value)} />
+            <label className="text-sm font-medium text-[#0F172A]">Notas</label>
+            <textarea className="min-h-[120px] rounded-xl border border-[#E2E8F0] px-3 py-2 text-sm" value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
 
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
           <div className="flex items-center justify-end gap-3">
-            <button className="rounded-full border border-slate-200 px-4 py-2 text-sm" onClick={() => router.push(`/app/subs/${params.id}`)}>
+            <button className="rounded-full border border-[#0F172A] px-4 py-2 text-sm" onClick={() => router.push(`/app/subs/${params.id}`)}>
               Cancelar
             </button>
-            <button className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-900" onClick={onSave} disabled={saving || !name || !price}>
+            <button className="rounded-full bg-[#0F172A] px-4 py-2 text-sm font-semibold text-white" onClick={onSave} disabled={saving || !name || !price}>
               {saving ? 'Salvando…' : 'Salvar alterações'}
             </button>
           </div>

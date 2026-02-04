@@ -25,39 +25,39 @@ export default async function SubDetailPage({ params }: { params: Promise<{ id: 
     <div className="space-y-6">
       <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-xs text-slate-500">Assinatura</p>
-          <h1 className="text-2xl font-semibold text-slate-900">
+          <p className="text-xs text-[#64748B]">Assinatura</p>
+          <h1 className="text-2xl font-semibold">
             {sub.name} · {sub.price}
           </h1>
-          <p className="text-sm text-slate-500">Próxima cobrança: {sub.nextCharge}</p>
+          <p className="text-sm text-[#64748B]">Próxima cobrança: {sub.nextCharge}</p>
         </div>
-        <Link href="/app/subs" className="text-sm font-medium text-cyan-600">
+        <Link href="/app/subs" className="text-sm font-medium text-[#1D4ED8]">
           Voltar para lista
         </Link>
       </header>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500">Status atual</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">{statusLabel(sub.status)}</p>
+        <div className="rounded-[22px] border border-[#E7E2DA] p-4">
+          <p className="text-xs text-[#64748B]">Status atual</p>
+          <p className="mt-2 text-lg font-semibold">{statusLabel(sub.status)}</p>
         </div>
-        <div className="rounded-2xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500">Criado em</p>
-          <p className="mt-2 text-sm text-slate-700">{new Date(sub.createdAt).toLocaleString('pt-BR')}</p>
+        <div className="rounded-[22px] border border-[#E7E2DA] p-4">
+          <p className="text-xs text-[#64748B]">Criado em</p>
+          <p className="mt-2 text-sm text-[#475569]">{new Date(sub.createdAt).toLocaleString('pt-BR')}</p>
         </div>
-        <div className="rounded-2xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500">Atualizado</p>
-          <p className="mt-2 text-sm text-slate-700">{new Date(sub.updatedAt).toLocaleString('pt-BR')}</p>
+        <div className="rounded-[22px] border border-[#E7E2DA] p-4">
+          <p className="text-xs text-[#64748B]">Atualizado</p>
+          <p className="mt-2 text-sm text-[#475569]">{new Date(sub.updatedAt).toLocaleString('pt-BR')}</p>
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 p-5">
-        <h2 className="text-sm font-semibold text-slate-900">Notas</h2>
-        <p className="mt-2 text-sm text-slate-600">{sub.notes || 'Sem notas adicionais.'}</p>
+      <section className="rounded-[22px] border border-[#E7E2DA] p-5">
+        <h2 className="text-sm font-semibold">Notas</h2>
+        <p className="mt-2 text-sm text-[#475569]">{sub.notes || 'Sem notas adicionais.'}</p>
       </section>
 
       <section className="flex flex-wrap gap-3">
-        <Link href={`/app/subs/${sub.id}/edit`} className="rounded-full border border-slate-200 px-4 py-2 text-sm">
+        <Link href={`/app/subs/${sub.id}/edit`} className="rounded-full border border-[#0F172A] px-4 py-2 text-sm">
           Editar
         </Link>
         <form
@@ -70,26 +70,8 @@ export default async function SubDetailPage({ params }: { params: Promise<{ id: 
             if (res.ok) window.location.href = '/app/subs'
           }}
         >
-          <button className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white">
+          <button className="rounded-full bg-[#0F172A] px-4 py-2 text-sm font-semibold text-white">
             Excluir
-          </button>
-        </form>
-      </section>
-
-      <section className="rounded-2xl border border-slate-200 p-5">
-        <h2 className="text-sm font-semibold text-slate-900">Atualizar status</h2>
-        <form
-          action={`/api/subs/${sub.id}/status`}
-          method="post"
-          className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center"
-        >
-          <select name="status" className="rounded-lg border border-slate-200 px-3 py-2 text-sm">
-            <option value="ativa">Ativa</option>
-            <option value="a_cancelar">A cancelar</option>
-            <option value="cancelada">Cancelada</option>
-          </select>
-          <button className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-cyan-300" type="submit">
-            Salvar status
           </button>
         </form>
       </section>
