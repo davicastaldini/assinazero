@@ -29,9 +29,15 @@ function statusLabel(status: string) {
 }
 
 const insights = [
-  { title: 'Assinaturas duplicadas', value: '2 serviços', detail: 'Economia possível: R$ 34/mês' },
-  { title: 'Renovações nos próximos 7 dias', value: '4 cobranças', detail: 'R$ 152 no total' },
-  { title: 'Serviços sem uso', value: '3 ativos', detail: 'Potencial de corte: R$ 89/mês' },
+  { title: 'Duplicadas detectadas', value: '2 serviços', detail: 'Economia provável: R$ 34/mês' },
+  { title: 'Renovações nos próximos 7 dias', value: '4 cobranças', detail: 'Total estimado: R$ 152' },
+  { title: 'Serviços sem uso', value: '3 ativos', detail: 'Corte sugerido: R$ 89/mês' },
+]
+
+const upcoming = [
+  { name: 'Adobe', date: '06 Fev', price: 'R$ 89', risk: 'alto' },
+  { name: 'Spotify', date: '08 Fev', price: 'R$ 34,90', risk: 'médio' },
+  { name: 'Notion', date: '12 Fev', price: 'R$ 49', risk: 'baixo' },
 ]
 
 export default async function DashboardPage() {
@@ -45,7 +51,7 @@ export default async function DashboardPage() {
       <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Visão geral financeira</h1>
-          <p className="text-sm text-white/60">Seu fluxo de assinaturas, alertas e oportunidades de corte.</p>
+          <p className="text-sm text-white/60">Sinais, alertas e ações para reduzir seus custos.</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white/80">
@@ -57,34 +63,93 @@ export default async function DashboardPage() {
         </div>
       </header>
 
+      <section className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#111827] via-[#0F1423] to-[#0B0F1A] p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-white/50">Resumo do mês</p>
+              <p className="mt-3 text-3xl font-semibold">R$ 486,00</p>
+              <p className="mt-2 text-xs text-emerald-300">R$ 128 economizáveis se você cortar 2 serviços</p>
+            </div>
+            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60">
+              01–31 Jan
+            </div>
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs text-white/60">Ativas</p>
+              <p className="mt-2 text-2xl font-semibold">{total}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs text-white/60">A cancelar</p>
+              <p className="mt-2 text-2xl font-semibold">{aCancelar}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs text-white/60">Canceladas</p>
+              <p className="mt-2 text-2xl font-semibold">{canceladas}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-[#0F1423] p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Próximas cobranças</h2>
+            <Link href="/app/subs" className="text-xs font-semibold text-cyan-300">
+              Ver todas
+            </Link>
+          </div>
+          <div className="mt-6 space-y-4">
+            {upcoming.map((item) => (
+              <div key={item.name} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
+                <div>
+                  <p className="text-sm font-semibold">{item.name}</p>
+                  <p className="text-xs text-white/50">{item.date}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold">{item.price}</p>
+                  <p className="text-xs text-white/50">Risco {item.risk}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <p className="text-xs text-white/60">Assinaturas ativas</p>
-          <p className="mt-2 text-3xl font-semibold">{total}</p>
-          <p className="mt-3 text-xs text-emerald-300">+2 este mês</p>
-        </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <p className="text-xs text-white/60">A cancelar</p>
-          <p className="mt-2 text-3xl font-semibold">{aCancelar}</p>
-          <p className="mt-3 text-xs text-amber-300">R$ 87/mês em risco</p>
-        </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <p className="text-xs text-white/60">Economia estimada</p>
           <p className="mt-2 text-3xl font-semibold">R$ 128</p>
           <p className="mt-3 text-xs text-cyan-300">Meta: R$ 200</p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-          <p className="text-xs text-white/60">Canceladas</p>
-          <p className="mt-2 text-3xl font-semibold">{canceladas}</p>
-          <p className="mt-3 text-xs text-white/50">Últimos 90 dias</p>
+          <p className="text-xs text-white/60">Alertas configurados</p>
+          <p className="mt-2 text-3xl font-semibold">12</p>
+          <p className="mt-3 text-xs text-white/50">Ativos e monitorando</p>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <p className="text-xs text-white/60">Gasto médio</p>
+          <p className="mt-2 text-3xl font-semibold">R$ 39</p>
+          <p className="mt-3 text-xs text-white/50">Por assinatura</p>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <p className="text-xs text-white/60">Renovações este mês</p>
+          <p className="mt-2 text-3xl font-semibold">8</p>
+          <p className="mt-3 text-xs text-amber-300">2 críticas</p>
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+      <section className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <div className="rounded-2xl border border-white/10 bg-[#0F1423] p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Fluxo mensal</h2>
             <span className="text-xs text-white/50">Jan — Fev</span>
+          </div>
+          <div className="mt-6 h-[200px] rounded-2xl bg-gradient-to-r from-[#2563EB]/40 via-[#22D3EE]/20 to-[#0EA5E9]/30 p-4">
+            <div className="flex h-full items-end gap-3">
+              {['45%', '58%', '40%', '75%', '64%', '88%', '55%'].map((h, i) => (
+                <div key={i} className="flex-1 rounded-xl bg-white/70" style={{ height: h }} />
+              ))}
+            </div>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-xl bg-white/5 p-4">
@@ -98,13 +163,6 @@ export default async function DashboardPage() {
             <div className="rounded-xl bg-white/5 p-4">
               <p className="text-xs text-white/60">Próxima renovação</p>
               <p className="mt-2 text-2xl font-semibold">3 dias</p>
-            </div>
-          </div>
-          <div className="mt-6 h-[200px] rounded-2xl bg-gradient-to-r from-[#2563EB]/40 via-[#22D3EE]/20 to-[#0EA5E9]/30 p-4">
-            <div className="flex h-full items-end gap-3">
-              {['45%', '58%', '40%', '75%', '64%', '88%', '55%'].map((h, i) => (
-                <div key={i} className="flex-1 rounded-xl bg-white/70" style={{ height: h }} />
-              ))}
             </div>
           </div>
         </div>
