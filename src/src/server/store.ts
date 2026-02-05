@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { prisma } from './db'
 
 export type SubscriptionStatus = 'ativa' | 'a_cancelar' | 'cancelada'
 
@@ -13,46 +13,84 @@ export type Subscription = {
   updatedAt: string
 }
 
-const subs = new Map<string, Subscription>()
+function toSubscription(row: any): Subscription {
+  return {
+    id: row.id,
+    name: row.name,
+    price: row.price,
+    nextCharge: row.nextCharge,
+    status: row.status as SubscriptionStatus,
+    notes: row.notes ?? '',
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  }
+}
+
+const seedSubs = [
+  {
+    name: 'Netflix',
+    price: 'R$ 55,90',
+    nextCharge: '2026-02-10',
+    status: 'ativa' as const,
+    notes: 'Plano padrão. Sem uso há 12 dias.',
+  },
+  {
+    name: 'Spotify',
+    price: 'R$ 34,90',
+    nextCharge: '2026-02-08',
+    status: 'a_cancelar' as const,
+    notes: 'Marcar para cancelar após a próxima cobrança.',
+  },
+  {
+    name: 'Adobe CC',
+    price: 'R$ 89,00',
+    nextCharge: '2026-02-06',
+    status: 'a_cancelar' as const,
+    notes: 'Equipe migrou para alternativa mais barata.',
+  },
+  {
+    name: 'Notion',
+    price: 'R$ 49,00',
+    nextCharge: '2026-02-12',
+    status: 'ativa' as const,
+    notes: '',
+  },
+]
+
+async function ensureSeed() {
+  const count = await prisma.subscription.count()
+  if (count > 0) return
+  await prisma.subscription.createMany({ data: seedSubs })
+}
 
 export async function listSubs() {
-  ensureSeed()
-  return Array.from(subs.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  await ensureSeed()
+  const rows = await prisma.subscription.findMany({ orderBy: { createdAt: 'desc' } })
+  return rows.map(toSubscription)
 }
 
 export async function getSub(id: string) {
-  ensureSeed()
-  return subs.get(id) || null
+  await ensureSeed()
+  const row = await prisma.subscription.findUnique({ where: { id } })
+  return row ? toSubscription(row) : null
 }
 
-export async function createSub(payload: {
+export async function createSub(data: {
   name: string
   price: string
   nextCharge: string
   status: SubscriptionStatus
   notes: string
 }) {
-  const now = new Date().toISOString()
-  const sub: Subscription = {
-    id: randomUUID(),
-    name: payload.name,
-    price: payload.price,
-    nextCharge: payload.nextCharge,
-    status: payload.status,
-    notes: payload.notes,
-    createdAt: now,
-    updatedAt: now,
-  }
-  subs.set(sub.id, sub)
-  return sub
+  await ensureSeed()
+  const row = await prisma.subscription.create({ data })
+  return toSubscription(row)
 }
 
 export async function updateSubStatus(id: string, status: SubscriptionStatus) {
-  const sub = subs.get(id)
-  if (!sub) return null
-  const updated = { ...sub, status, updatedAt: new Date().toISOString() }
-  subs.set(id, updated)
-  return updated
+  await ensureSeed()
+  const row = await prisma.subscription.update({ where: { id }, data: { status } })
+  return toSubscription(row)
 }
 
 export async function updateSub(
@@ -65,59 +103,13 @@ export async function updateSub(
     notes: string
   }
 ) {
-  const sub = subs.get(id)
-  if (!sub) return null
-  const updated = {
-    ...sub,
-    ...payload,
-    updatedAt: new Date().toISOString(),
-  }
-  subs.set(id, updated)
-  return updated
+  await ensureSeed()
+  const row = await prisma.subscription.update({ where: { id }, data: payload })
+  return toSubscription(row)
 }
 
 export async function deleteSub(id: string) {
-  const sub = subs.get(id)
-  if (!sub) return null
-  subs.delete(id)
-  return sub
-}
-
-function ensureSeed() {
-  if (subs.size > 0) return
-  const now = new Date().toISOString()
-  const seed: Subscription[] = [
-    {
-      id: randomUUID(),
-      name: 'Spotify',
-      price: 'R$ 21,90',
-      nextCharge: '2026-02-12',
-      status: 'ativa',
-      notes: 'Uso diário. Manter.',
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: randomUUID(),
-      name: 'Adobe',
-      price: 'R$ 89,00',
-      nextCharge: '2026-02-10',
-      status: 'a_cancelar',
-      notes: 'Sem uso há 60 dias. Cancelar antes de renovar.',
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: randomUUID(),
-      name: 'Gympass',
-      price: 'R$ 139,00',
-      nextCharge: '2026-02-19',
-      status: 'ativa',
-      notes: 'Renegociar plano no próximo mês.',
-      createdAt: now,
-      updatedAt: now,
-    },
-  ]
-
-  seed.forEach((sub) => subs.set(sub.id, sub))
+  await ensureSeed()
+  const row = await prisma.subscription.delete({ where: { id } })
+  return row ? toSubscription(row) : null
 }
